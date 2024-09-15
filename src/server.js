@@ -13,7 +13,16 @@ const app = express();
 const PORT = process.env.PORT || 3030;
 
 app.use(bodyParser.json());
-app.use(cors());
+const allowedOrigins = ['http://localhost:3000'];
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
 
 let currentHumidity = null;
 let currentMoisture = null; // Add this line
