@@ -13,15 +13,19 @@ const app = express();
 const PORT = process.env.PORT || 3030;
 
 app.use(bodyParser.json());
-const allowedOrigins = ['http://localhost:3000'];
+
+const allowedOrigins = ['http://103.245.164.59:3000', 'http://localhost:3000'];
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.log(`Blocked by CORS: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
-  }
+  },
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
 }));
 
 let currentHumidity = null;
